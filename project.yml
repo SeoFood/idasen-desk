@@ -1,0 +1,97 @@
+name: IdasenDesk
+options:
+  bundleIdPrefix: com.seofood
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    GCC_WARN_INHIBIT_ALL_WARNINGS: NO
+    CLANG_ANALYZER_NONNULL: YES
+    DEAD_CODE_STRIPPING: YES
+targets:
+  IdasenDeskCore:
+    type: library.static
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/IdasenDeskCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDeskCore
+        DEFINES_MODULE: YES
+    dependencies:
+      - sdk: CoreBluetooth.framework
+      - sdk: Carbon.framework
+
+  IdasenDesk:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/IdasenDeskApp
+    info:
+      path: Sources/IdasenDeskApp/Resources/Info.plist
+      properties:
+        LSApplicationCategoryType: public.app-category.utilities
+        LSUIElement: true
+        NSAppleScriptEnabled: true
+        NSBluetoothAlwaysUsageDescription: Idasen Desk needs Bluetooth access to discover, connect to, and move your desk.
+        NSBluetoothPeripheralUsageDescription: Idasen Desk needs Bluetooth access to discover, connect to, and move your desk.
+        NSPrincipalClass: NSApplication
+        OSAScriptingDefinition: deskcontroller.sdef
+    entitlements:
+      path: Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.device.bluetooth: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDesk
+        PRODUCT_NAME: Idasen Desk
+        PRODUCT_MODULE_NAME: IdasenDesk
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    dependencies:
+      - target: IdasenDeskCore
+      - sdk: AppKit.framework
+      - sdk: SwiftUI.framework
+      - sdk: AppIntents.framework
+      - sdk: ServiceManagement.framework
+
+  IdasenDeskCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDeskCoreTests
+    sources:
+      - path: Tests/IdasenDeskCoreTests
+    dependencies:
+      - target: IdasenDeskCore
+
+  IdasenDeskUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    deploymentTarget: "14.0"
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDeskUITests
+    sources:
+      - path: UITests/IdasenDeskUITests
+    dependencies:
+      - target: IdasenDesk
+schemes:
+  IdasenDesk:
+    build:
+      targets:
+        IdasenDesk: all
+    test:
+      targets:
+        - IdasenDeskCoreTests
+        - IdasenDeskUITests

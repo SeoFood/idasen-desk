@@ -1,0 +1,978 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		007002E187CB0A2F90401627 /* ShortcutValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83514AE84DD593618E098546 /* ShortcutValidationTests.swift */; };
+		030C45ABAEB15334B923A4F1 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F2E4C6E63A38E37185A393 /* Carbon.framework */; };
+		0A8CB521C91982E8373CC112 /* AutoStandPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D413AE9336DC79E280416 /* AutoStandPlannerTests.swift */; };
+		1036EBFF3BC33C6C43225CB3 /* libIdasenDeskCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58B4998B65A371BBEEC3F7 /* libIdasenDeskCore.a */; };
+		290808595329FD9DDA73FCB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D556C12206B6B544862E45C /* AppDelegate.swift */; };
+		2D127EC12DD298A1D21CA9DE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568FC3583324A2891D90AB4A /* SettingsView.swift */; };
+		3C0683959CC8C0643140A3AC /* MovementCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9A4BE951C8A6006026478D /* MovementCoordinator.swift */; };
+		426FA90207047D770C5C00E3 /* AutoStandScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF13D93CFFB9E3310B0BA4F /* AutoStandScheduler.swift */; };
+		45058BC6042371C0A38CE825 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F119F3229679D87412A27DB /* OnboardingView.swift */; };
+		46E3DE263F74BB788AEBB026 /* MoveDeskCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F944B8B6E190B972B82CCC /* MoveDeskCommand.swift */; };
+		4F26A61F57128BCBBCCEEDCD /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A94DB87BAEE421F29A5D52 /* AppModel.swift */; };
+		54075C1A0F72AB66F3A19BAA /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109FEFC996BDCA497DED9E69 /* MenuBarContentView.swift */; };
+		57FB3283B5E74A4D0AD0F3FE /* DeskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24904C0016E9404730C4FC64 /* DeskService.swift */; };
+		58523A769543CAB965A431A1 /* CommandParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D694D485B6964F14BF1BA6FB /* CommandParsingTests.swift */; };
+		586FAE793174556C66B85AFE /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A3D451CFF6702D81F0C7B /* AppContainer.swift */; };
+		5CF2737D053DD3387B54B94D /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B70C3D7F1B5A39D340E7A7D /* DiagnosticsView.swift */; };
+		66039EA615920E4E50CA1D59 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD0E0544999FE505B72BB50 /* ServiceManagement.framework */; };
+		6FE8E06F68DBE32FC733489F /* ShortcutModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB262075EA7F52359447381D /* ShortcutModels.swift */; };
+		77184AD3B11A12D3F186AAF1 /* ShortcutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA8A6ADB72BF44116D89480 /* ShortcutManager.swift */; };
+		77D474C674EF1E2FB0CDD29C /* IdasenDeskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B67E9477778304B8598D9 /* IdasenDeskApp.swift */; };
+		77F3B3381F4749E7377CBCE3 /* UnitConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3A0B26683944161B36D459 /* UnitConversion.swift */; };
+		7B298B7592BA64BB97DDE32D /* CommandParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8583DF93DEC37B095B3F291 /* CommandParsing.swift */; };
+		7B968394380E8B826A4717E5 /* deskcontroller.sdef in Resources */ = {isa = PBXBuildFile; fileRef = CFEF6310DEB83DA3093BF61E /* deskcontroller.sdef */; };
+		9B7CBDA9204880E53D50B40D /* ShortcutsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BDDC373FE7959B4D92C6BA /* ShortcutsSettingsView.swift */; };
+		9C5B82961F2F021601635806 /* MoveDeskToHeightCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5380AC479D2E10E8BBE1BF /* MoveDeskToHeightCommand.swift */; };
+		9F1628B9195437233917ACAF /* AdvancedSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD05B2C47F7DB06912352C1 /* AdvancedSettingsView.swift */; };
+		A27A11757E3D652CDF385D44 /* LoginItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */; };
+		AF39386AFB300BC256DA7694 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CE0FA49AC645836CBF9C7F /* GeneralSettingsView.swift */; };
+		B3403FE70687A265DB9E42E3 /* IdasenBLEProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2037BF843DE0ECE8F9BB8E3E /* IdasenBLEProtocol.swift */; };
+		B6C824676B5DACFD9881E55A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D2278F2B1B2AB1CBB783ED /* AppKit.framework */; };
+		BFBC5767C17F862F64D3AC44 /* BluetoothDeskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7FB9ED7A23D3150586D66A /* BluetoothDeskService.swift */; };
+		C412991761396DAEA0F4964E /* DeskTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DA9D16AA65E1A6095A86 /* DeskTypes.swift */; };
+		C6FF9BD981CCA21EE6A618EC /* AppCommandBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBB6EBA3CE1415A622D11E /* AppCommandBus.swift */; };
+		C90139D75E7FF815478BE3C0 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188019F309EA2A1002379A8E /* AppSettings.swift */; };
+		CC74664CC55B0AA6CF2F4F0C /* DesksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37B736373C32F08A9B11DC3 /* DesksSettingsView.swift */; };
+		CD8AA1B31A5724334409B2FF /* IdasenDeskUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECD1748A992495B656A2FEB /* IdasenDeskUITests.swift */; };
+		D6861253A35404E30CC2E5DD /* MovementCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5E18165247A40FC682B34F /* MovementCoordinatorTests.swift */; };
+		DF74B74363387CCAF09A535A /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5D63E28993BCF26A418944 /* SettingsStoreTests.swift */; };
+		E28AE1AF60F62DCB1392CA97 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1518205B080C6FBF102D57 /* CoreBluetooth.framework */; };
+		E56FBF5E61044A6A8A33A7E6 /* DeskAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD54D4980C05F0FCE64200F /* DeskAppIntents.swift */; };
+		E9E05C2080A49D41744D1394 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E54402D86337132036AA465E /* AppIntents.framework */; };
+		EE6294607DE8C935D9A205CC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DF240D5AC1584469FC16A0E /* SwiftUI.framework */; };
+		F455F57815A791F115A941C6 /* IdasenBLEProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C277FB79BA014DEDEEB900D6 /* IdasenBLEProtocolTests.swift */; };
+		F5FDFC74BCD14A5BA35C61B1 /* AutomationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9E62E09587C428C7C1824D /* AutomationSettingsView.swift */; };
+		F696C7A51C5E142661D2BD72 /* libIdasenDeskCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58B4998B65A371BBEEC3F7 /* libIdasenDeskCore.a */; };
+		FCCC4655BA46D3D539EA1700 /* EventBroadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F01BCF2F6E27AC4789C7D /* EventBroadcaster.swift */; };
+		FD9BCAD06CBFEBBA5C9DE9A1 /* OnboardingWindowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECA65D69393907998EAABD /* OnboardingWindowPresenter.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1BEAFB22DB00D67DD9F65C75 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2DD7B4804BD781BA026AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3BBA91AB567AE9DC5FAC7F57;
+			remoteInfo = IdasenDeskCore;
+		};
+		5C8903B517051F0EE46C4246 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2DD7B4804BD781BA026AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B65BB2FB1DA2EDB1AED23BF;
+			remoteInfo = IdasenDesk;
+		};
+		FF336503AE1FD1B290D47215 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2DD7B4804BD781BA026AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3BBA91AB567AE9DC5FAC7F57;
+			remoteInfo = IdasenDeskCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00F944B8B6E190B972B82CCC /* MoveDeskCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveDeskCommand.swift; sourceTree = "<group>"; };
+		109FEFC996BDCA497DED9E69 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		188019F309EA2A1002379A8E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		1A5D63E28993BCF26A418944 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreTests.swift; sourceTree = "<group>"; };
+		1E7FB9ED7A23D3150586D66A /* BluetoothDeskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDeskService.swift; sourceTree = "<group>"; };
+		2037BF843DE0ECE8F9BB8E3E /* IdasenBLEProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdasenBLEProtocol.swift; sourceTree = "<group>"; };
+		24904C0016E9404730C4FC64 /* DeskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskService.swift; sourceTree = "<group>"; };
+		2E9E62E09587C428C7C1824D /* AutomationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationSettingsView.swift; sourceTree = "<group>"; };
+		3ECD1748A992495B656A2FEB /* IdasenDeskUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdasenDeskUITests.swift; sourceTree = "<group>"; };
+		428F01BCF2F6E27AC4789C7D /* EventBroadcaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBroadcaster.swift; sourceTree = "<group>"; };
+		43F2E4C6E63A38E37185A393 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		4CF13D93CFFB9E3310B0BA4F /* AutoStandScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoStandScheduler.swift; sourceTree = "<group>"; };
+		4DF240D5AC1584469FC16A0E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		4E9A4BE951C8A6006026478D /* MovementCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementCoordinator.swift; sourceTree = "<group>"; };
+		50D2278F2B1B2AB1CBB783ED /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5422CB686C723CF4CC393EA5 /* IdasenDeskCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IdasenDeskCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		568FC3583324A2891D90AB4A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		5B5380AC479D2E10E8BBE1BF /* MoveDeskToHeightCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveDeskToHeightCommand.swift; sourceTree = "<group>"; };
+		5B5E18165247A40FC682B34F /* MovementCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementCoordinatorTests.swift; sourceTree = "<group>"; };
+		5CD05B2C47F7DB06912352C1 /* AdvancedSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsView.swift; sourceTree = "<group>"; };
+		6369782B5A1D7633AECD00C7 /* IdasenDeskUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IdasenDeskUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AA8A6ADB72BF44116D89480 /* ShortcutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutManager.swift; sourceTree = "<group>"; };
+		6B70C3D7F1B5A39D340E7A7D /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
+		6BD54D4980C05F0FCE64200F /* DeskAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskAppIntents.swift; sourceTree = "<group>"; };
+		6D556C12206B6B544862E45C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6F119F3229679D87412A27DB /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		6F1518205B080C6FBF102D57 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		83514AE84DD593618E098546 /* ShortcutValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutValidationTests.swift; sourceTree = "<group>"; };
+		844B67E9477778304B8598D9 /* IdasenDeskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdasenDeskApp.swift; sourceTree = "<group>"; };
+		8A3A3D451CFF6702D81F0C7B /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+		9438DA9D16AA65E1A6095A86 /* DeskTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeskTypes.swift; sourceTree = "<group>"; };
+		98ECA65D69393907998EAABD /* OnboardingWindowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingWindowPresenter.swift; sourceTree = "<group>"; };
+		A0CE0FA49AC645836CBF9C7F /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		A1BDDC373FE7959B4D92C6BA /* ShortcutsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingsView.swift; sourceTree = "<group>"; };
+		A70C1CBADCADB5AF45544A57 /* IdasenDesk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdasenDesk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8583DF93DEC37B095B3F291 /* CommandParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandParsing.swift; sourceTree = "<group>"; };
+		BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemController.swift; sourceTree = "<group>"; };
+		BFD0E0544999FE505B72BB50 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		C1A94DB87BAEE421F29A5D52 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		C277FB79BA014DEDEEB900D6 /* IdasenBLEProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdasenBLEProtocolTests.swift; sourceTree = "<group>"; };
+		C37B736373C32F08A9B11DC3 /* DesksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesksSettingsView.swift; sourceTree = "<group>"; };
+		C3CBB6EBA3CE1415A622D11E /* AppCommandBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommandBus.swift; sourceTree = "<group>"; };
+		CFEF6310DEB83DA3093BF61E /* deskcontroller.sdef */ = {isa = PBXFileReference; path = deskcontroller.sdef; sourceTree = "<group>"; };
+		D6271120EA748C7438647143 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D694D485B6964F14BF1BA6FB /* CommandParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandParsingTests.swift; sourceTree = "<group>"; };
+		DB262075EA7F52359447381D /* ShortcutModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutModels.swift; sourceTree = "<group>"; };
+		E54402D86337132036AA465E /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
+		EB3A0B26683944161B36D459 /* UnitConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitConversion.swift; sourceTree = "<group>"; };
+		EB58B4998B65A371BBEEC3F7 /* libIdasenDeskCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libIdasenDeskCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE2D413AE9336DC79E280416 /* AutoStandPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoStandPlannerTests.swift; sourceTree = "<group>"; };
+		FFFFEFD5F5E2C69DB99A3030 /* IdasenDesk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IdasenDesk.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9D5F2F41F5968C19FFC27FCB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F696C7A51C5E142661D2BD72 /* libIdasenDeskCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B6DD106C0BEA97E5A35B6608 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1036EBFF3BC33C6C43225CB3 /* libIdasenDeskCore.a in Frameworks */,
+				B6C824676B5DACFD9881E55A /* AppKit.framework in Frameworks */,
+				EE6294607DE8C935D9A205CC /* SwiftUI.framework in Frameworks */,
+				E9E05C2080A49D41744D1394 /* AppIntents.framework in Frameworks */,
+				66039EA615920E4E50CA1D59 /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F17ED0768FEFB0148A2CE0EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E28AE1AF60F62DCB1392CA97 /* CoreBluetooth.framework in Frameworks */,
+				030C45ABAEB15334B923A4F1 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		040BA9AF0CCFD65F263A55C5 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				C3CBB6EBA3CE1415A622D11E /* AppCommandBus.swift */,
+				8A3A3D451CFF6702D81F0C7B /* AppContainer.swift */,
+				6D556C12206B6B544862E45C /* AppDelegate.swift */,
+				C1A94DB87BAEE421F29A5D52 /* AppModel.swift */,
+				844B67E9477778304B8598D9 /* IdasenDeskApp.swift */,
+				BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0FDCBB2D4764ED76E7DEA6E8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				5CD05B2C47F7DB06912352C1 /* AdvancedSettingsView.swift */,
+				2E9E62E09587C428C7C1824D /* AutomationSettingsView.swift */,
+				C37B736373C32F08A9B11DC3 /* DesksSettingsView.swift */,
+				A0CE0FA49AC645836CBF9C7F /* GeneralSettingsView.swift */,
+				568FC3583324A2891D90AB4A /* SettingsView.swift */,
+				A1BDDC373FE7959B4D92C6BA /* ShortcutsSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		119DABE3FF8D1E79417AB72E /* IdasenDeskApp */ = {
+			isa = PBXGroup;
+			children = (
+				040BA9AF0CCFD65F263A55C5 /* App */,
+				E7127980E8613E5F5B6487F4 /* Intents */,
+				CCC3135FC49AC0A12DEEC996 /* Resources */,
+				439597D9E57037A5DE7F8A42 /* Scripting */,
+				6C3DAF0C046E4AECC6C48601 /* UI */,
+			);
+			name = IdasenDeskApp;
+			path = Sources/IdasenDeskApp;
+			sourceTree = "<group>";
+		};
+		15099E0862702EE28F49754F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A70C1CBADCADB5AF45544A57 /* IdasenDesk.app */,
+				5422CB686C723CF4CC393EA5 /* IdasenDeskCoreTests.xctest */,
+				6369782B5A1D7633AECD00C7 /* IdasenDeskUITests.xctest */,
+				EB58B4998B65A371BBEEC3F7 /* libIdasenDeskCore.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AA63B6C1428C7D8F8659719 /* Diagnostics */ = {
+			isa = PBXGroup;
+			children = (
+				6B70C3D7F1B5A39D340E7A7D /* DiagnosticsView.swift */,
+			);
+			path = Diagnostics;
+			sourceTree = "<group>";
+		};
+		3C3BA2937AEBB9FFC4F10ACC = {
+			isa = PBXGroup;
+			children = (
+				119DABE3FF8D1E79417AB72E /* IdasenDeskApp */,
+				E1D035AF91A6DD57C34513A2 /* IdasenDeskCore */,
+				489A17A6CFA0C623711434FF /* IdasenDeskCoreTests */,
+				8093353F91545E82D3CCB402 /* IdasenDeskUITests */,
+				8879548F25AAD93A430CA9FC /* Frameworks */,
+				15099E0862702EE28F49754F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		403121A9332A71A7265FCFC1 /* Automation */ = {
+			isa = PBXGroup;
+			children = (
+				4CF13D93CFFB9E3310B0BA4F /* AutoStandScheduler.swift */,
+			);
+			path = Automation;
+			sourceTree = "<group>";
+		};
+		439597D9E57037A5DE7F8A42 /* Scripting */ = {
+			isa = PBXGroup;
+			children = (
+				00F944B8B6E190B972B82CCC /* MoveDeskCommand.swift */,
+				5B5380AC479D2E10E8BBE1BF /* MoveDeskToHeightCommand.swift */,
+			);
+			path = Scripting;
+			sourceTree = "<group>";
+		};
+		442FB16B5648A9E8B6E9A8E4 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				188019F309EA2A1002379A8E /* AppSettings.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		489A17A6CFA0C623711434FF /* IdasenDeskCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				EE2D413AE9336DC79E280416 /* AutoStandPlannerTests.swift */,
+				D694D485B6964F14BF1BA6FB /* CommandParsingTests.swift */,
+				C277FB79BA014DEDEEB900D6 /* IdasenBLEProtocolTests.swift */,
+				5B5E18165247A40FC682B34F /* MovementCoordinatorTests.swift */,
+				1A5D63E28993BCF26A418944 /* SettingsStoreTests.swift */,
+				83514AE84DD593618E098546 /* ShortcutValidationTests.swift */,
+			);
+			name = IdasenDeskCoreTests;
+			path = Tests/IdasenDeskCoreTests;
+			sourceTree = "<group>";
+		};
+		577347AD41C4708FAD655DB9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B8583DF93DEC37B095B3F291 /* CommandParsing.swift */,
+				9438DA9D16AA65E1A6095A86 /* DeskTypes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5A476FE1C96DDA67DF4E0EBD /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				6F119F3229679D87412A27DB /* OnboardingView.swift */,
+				98ECA65D69393907998EAABD /* OnboardingWindowPresenter.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		6C3DAF0C046E4AECC6C48601 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				1AA63B6C1428C7D8F8659719 /* Diagnostics */,
+				DB6933C965A15A71400646B4 /* MenuBar */,
+				5A476FE1C96DDA67DF4E0EBD /* Onboarding */,
+				0FDCBB2D4764ED76E7DEA6E8 /* Settings */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		75E061E59C4C4EC430279A7A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				428F01BCF2F6E27AC4789C7D /* EventBroadcaster.swift */,
+				EB3A0B26683944161B36D459 /* UnitConversion.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		8093353F91545E82D3CCB402 /* IdasenDeskUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3ECD1748A992495B656A2FEB /* IdasenDeskUITests.swift */,
+			);
+			name = IdasenDeskUITests;
+			path = UITests/IdasenDeskUITests;
+			sourceTree = "<group>";
+		};
+		8879548F25AAD93A430CA9FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E54402D86337132036AA465E /* AppIntents.framework */,
+				50D2278F2B1B2AB1CBB783ED /* AppKit.framework */,
+				43F2E4C6E63A38E37185A393 /* Carbon.framework */,
+				6F1518205B080C6FBF102D57 /* CoreBluetooth.framework */,
+				BFD0E0544999FE505B72BB50 /* ServiceManagement.framework */,
+				4DF240D5AC1584469FC16A0E /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		889D3CF598B517A8BF99DD2C /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				1E7FB9ED7A23D3150586D66A /* BluetoothDeskService.swift */,
+				24904C0016E9404730C4FC64 /* DeskService.swift */,
+				2037BF843DE0ECE8F9BB8E3E /* IdasenBLEProtocol.swift */,
+			);
+			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		9FE83A7087AB9A0F8C229E69 /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				6AA8A6ADB72BF44116D89480 /* ShortcutManager.swift */,
+				DB262075EA7F52359447381D /* ShortcutModels.swift */,
+			);
+			path = Shortcuts;
+			sourceTree = "<group>";
+		};
+		CCC3135FC49AC0A12DEEC996 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CFEF6310DEB83DA3093BF61E /* deskcontroller.sdef */,
+				FFFFEFD5F5E2C69DB99A3030 /* IdasenDesk.entitlements */,
+				D6271120EA748C7438647143 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		DB6933C965A15A71400646B4 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				109FEFC996BDCA497DED9E69 /* MenuBarContentView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		E1D035AF91A6DD57C34513A2 /* IdasenDeskCore */ = {
+			isa = PBXGroup;
+			children = (
+				403121A9332A71A7265FCFC1 /* Automation */,
+				889D3CF598B517A8BF99DD2C /* Bluetooth */,
+				577347AD41C4708FAD655DB9 /* Models */,
+				F3470539FAD51DA146049B58 /* Movement */,
+				442FB16B5648A9E8B6E9A8E4 /* Persistence */,
+				9FE83A7087AB9A0F8C229E69 /* Shortcuts */,
+				75E061E59C4C4EC430279A7A /* Utilities */,
+			);
+			name = IdasenDeskCore;
+			path = Sources/IdasenDeskCore;
+			sourceTree = "<group>";
+		};
+		E7127980E8613E5F5B6487F4 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				6BD54D4980C05F0FCE64200F /* DeskAppIntents.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		F3470539FAD51DA146049B58 /* Movement */ = {
+			isa = PBXGroup;
+			children = (
+				4E9A4BE951C8A6006026478D /* MovementCoordinator.swift */,
+			);
+			path = Movement;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1B65BB2FB1DA2EDB1AED23BF /* IdasenDesk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1097E2FEE264B856EB48C5C9 /* Build configuration list for PBXNativeTarget "IdasenDesk" */;
+			buildPhases = (
+				F313DFA815732FD7487D392D /* Sources */,
+				F45849381F067139FAA787F5 /* Resources */,
+				B6DD106C0BEA97E5A35B6608 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCFFF8686044551090866FAF /* PBXTargetDependency */,
+			);
+			name = IdasenDesk;
+			packageProductDependencies = (
+			);
+			productName = IdasenDesk;
+			productReference = A70C1CBADCADB5AF45544A57 /* IdasenDesk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3BBA91AB567AE9DC5FAC7F57 /* IdasenDeskCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE92790DD259C1E75294AC26 /* Build configuration list for PBXNativeTarget "IdasenDeskCore" */;
+			buildPhases = (
+				E44B832FC411FDEE729FC1D8 /* Sources */,
+				C670583B68166D152A8B7F82 /* Copy Swift Objective-C Interface Header */,
+				F17ED0768FEFB0148A2CE0EC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IdasenDeskCore;
+			packageProductDependencies = (
+			);
+			productName = IdasenDeskCore;
+			productReference = EB58B4998B65A371BBEEC3F7 /* libIdasenDeskCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		57EC4177BA49B31C8DBF8335 /* IdasenDeskUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DC4B65DBE87E60B40D01EA2 /* Build configuration list for PBXNativeTarget "IdasenDeskUITests" */;
+			buildPhases = (
+				B17A63D016A1FE4BF5916C81 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3DF95E6456119C199795B431 /* PBXTargetDependency */,
+			);
+			name = IdasenDeskUITests;
+			packageProductDependencies = (
+			);
+			productName = IdasenDeskUITests;
+			productReference = 6369782B5A1D7633AECD00C7 /* IdasenDeskUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		C22CAC4D825812E289EED58C /* IdasenDeskCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB1F75E82E573AF19140572D /* Build configuration list for PBXNativeTarget "IdasenDeskCoreTests" */;
+			buildPhases = (
+				15DB90E060CB04696AB70752 /* Sources */,
+				9D5F2F41F5968C19FFC27FCB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				721D941502CBAE8FC504B4CC /* PBXTargetDependency */,
+			);
+			name = IdasenDeskCoreTests;
+			packageProductDependencies = (
+			);
+			productName = IdasenDeskCoreTests;
+			productReference = 5422CB686C723CF4CC393EA5 /* IdasenDeskCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		75A2DD7B4804BD781BA026AD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					57EC4177BA49B31C8DBF8335 = {
+						TestTargetID = 1B65BB2FB1DA2EDB1AED23BF;
+					};
+				};
+			};
+			buildConfigurationList = C80F53D77E373481F134F337 /* Build configuration list for PBXProject "IdasenDesk" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 3C3BA2937AEBB9FFC4F10ACC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 15099E0862702EE28F49754F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1B65BB2FB1DA2EDB1AED23BF /* IdasenDesk */,
+				3BBA91AB567AE9DC5FAC7F57 /* IdasenDeskCore */,
+				C22CAC4D825812E289EED58C /* IdasenDeskCoreTests */,
+				57EC4177BA49B31C8DBF8335 /* IdasenDeskUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F45849381F067139FAA787F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B968394380E8B826A4717E5 /* deskcontroller.sdef in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C670583B68166D152A8B7F82 /* Copy Swift Objective-C Interface Header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(DERIVED_SOURCES_DIR)/$(SWIFT_OBJC_INTERFACE_HEADER_NAME)",
+			);
+			name = "Copy Swift Objective-C Interface Header";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/include/$(PRODUCT_MODULE_NAME)/$(SWIFT_OBJC_INTERFACE_HEADER_NAME)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ditto \"${SCRIPT_INPUT_FILE_0}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		15DB90E060CB04696AB70752 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A8CB521C91982E8373CC112 /* AutoStandPlannerTests.swift in Sources */,
+				58523A769543CAB965A431A1 /* CommandParsingTests.swift in Sources */,
+				F455F57815A791F115A941C6 /* IdasenBLEProtocolTests.swift in Sources */,
+				D6861253A35404E30CC2E5DD /* MovementCoordinatorTests.swift in Sources */,
+				DF74B74363387CCAF09A535A /* SettingsStoreTests.swift in Sources */,
+				007002E187CB0A2F90401627 /* ShortcutValidationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B17A63D016A1FE4BF5916C81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD8AA1B31A5724334409B2FF /* IdasenDeskUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E44B832FC411FDEE729FC1D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C90139D75E7FF815478BE3C0 /* AppSettings.swift in Sources */,
+				426FA90207047D770C5C00E3 /* AutoStandScheduler.swift in Sources */,
+				BFBC5767C17F862F64D3AC44 /* BluetoothDeskService.swift in Sources */,
+				7B298B7592BA64BB97DDE32D /* CommandParsing.swift in Sources */,
+				57FB3283B5E74A4D0AD0F3FE /* DeskService.swift in Sources */,
+				C412991761396DAEA0F4964E /* DeskTypes.swift in Sources */,
+				FCCC4655BA46D3D539EA1700 /* EventBroadcaster.swift in Sources */,
+				B3403FE70687A265DB9E42E3 /* IdasenBLEProtocol.swift in Sources */,
+				3C0683959CC8C0643140A3AC /* MovementCoordinator.swift in Sources */,
+				77184AD3B11A12D3F186AAF1 /* ShortcutManager.swift in Sources */,
+				6FE8E06F68DBE32FC733489F /* ShortcutModels.swift in Sources */,
+				77F3B3381F4749E7377CBCE3 /* UnitConversion.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F313DFA815732FD7487D392D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F1628B9195437233917ACAF /* AdvancedSettingsView.swift in Sources */,
+				C6FF9BD981CCA21EE6A618EC /* AppCommandBus.swift in Sources */,
+				586FAE793174556C66B85AFE /* AppContainer.swift in Sources */,
+				290808595329FD9DDA73FCB5 /* AppDelegate.swift in Sources */,
+				4F26A61F57128BCBBCCEEDCD /* AppModel.swift in Sources */,
+				F5FDFC74BCD14A5BA35C61B1 /* AutomationSettingsView.swift in Sources */,
+				E56FBF5E61044A6A8A33A7E6 /* DeskAppIntents.swift in Sources */,
+				CC74664CC55B0AA6CF2F4F0C /* DesksSettingsView.swift in Sources */,
+				5CF2737D053DD3387B54B94D /* DiagnosticsView.swift in Sources */,
+				AF39386AFB300BC256DA7694 /* GeneralSettingsView.swift in Sources */,
+				77D474C674EF1E2FB0CDD29C /* IdasenDeskApp.swift in Sources */,
+				A27A11757E3D652CDF385D44 /* LoginItemController.swift in Sources */,
+				54075C1A0F72AB66F3A19BAA /* MenuBarContentView.swift in Sources */,
+				46E3DE263F74BB788AEBB026 /* MoveDeskCommand.swift in Sources */,
+				9C5B82961F2F021601635806 /* MoveDeskToHeightCommand.swift in Sources */,
+				45058BC6042371C0A38CE825 /* OnboardingView.swift in Sources */,
+				FD9BCAD06CBFEBBA5C9DE9A1 /* OnboardingWindowPresenter.swift in Sources */,
+				2D127EC12DD298A1D21CA9DE /* SettingsView.swift in Sources */,
+				9B7CBDA9204880E53D50B40D /* ShortcutsSettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3DF95E6456119C199795B431 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B65BB2FB1DA2EDB1AED23BF /* IdasenDesk */;
+			targetProxy = 5C8903B517051F0EE46C4246 /* PBXContainerItemProxy */;
+		};
+		721D941502CBAE8FC504B4CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3BBA91AB567AE9DC5FAC7F57 /* IdasenDeskCore */;
+			targetProxy = FF336503AE1FD1B290D47215 /* PBXContainerItemProxy */;
+		};
+		BCFFF8686044551090866FAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3BBA91AB567AE9DC5FAC7F57 /* IdasenDeskCore */;
+			targetProxy = 1BEAFB22DB00D67DD9F65C75 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2602F9239F1292A32F2D8C40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/IdasenDeskApp/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDesk;
+				PRODUCT_MODULE_NAME = IdasenDesk;
+				PRODUCT_NAME = "Idasen Desk";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		286F07A1BD8369B76E6EBBD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskCore;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		98D62E30D5869AF344333F5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskCoreTests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9C5BFB10F40F5F4487952ADB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskUITests;
+				SDKROOT = macosx;
+				TEST_TARGET_NAME = IdasenDesk;
+			};
+			name = Debug;
+		};
+		AE9F6BC400F453A44223A902 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskCoreTests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C8FE1DAC2AD1342C2AAE8691 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskCore;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		D82428EB6A103751F201C890 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E6E09A677A4D7E2B9EC5DB8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDeskUITests;
+				SDKROOT = macosx;
+				TEST_TARGET_NAME = IdasenDesk;
+			};
+			name = Release;
+		};
+		EA0477AD94FBD251BB6819BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		EC9BD8BB8E97C559A7DB15EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/IdasenDeskApp/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.seofood.IdasenDesk;
+				PRODUCT_MODULE_NAME = IdasenDesk;
+				PRODUCT_NAME = "Idasen Desk";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1097E2FEE264B856EB48C5C9 /* Build configuration list for PBXNativeTarget "IdasenDesk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC9BD8BB8E97C559A7DB15EF /* Debug */,
+				2602F9239F1292A32F2D8C40 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9DC4B65DBE87E60B40D01EA2 /* Build configuration list for PBXNativeTarget "IdasenDeskUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C5BFB10F40F5F4487952ADB /* Debug */,
+				E6E09A677A4D7E2B9EC5DB8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BE92790DD259C1E75294AC26 /* Build configuration list for PBXNativeTarget "IdasenDeskCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				286F07A1BD8369B76E6EBBD8 /* Debug */,
+				C8FE1DAC2AD1342C2AAE8691 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C80F53D77E373481F134F337 /* Build configuration list for PBXProject "IdasenDesk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA0477AD94FBD251BB6819BC /* Debug */,
+				D82428EB6A103751F201C890 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FB1F75E82E573AF19140572D /* Build configuration list for PBXNativeTarget "IdasenDeskCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98D62E30D5869AF344333F5B /* Debug */,
+				AE9F6BC400F453A44223A902 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 75A2DD7B4804BD781BA026AD /* Project object */;
+}
