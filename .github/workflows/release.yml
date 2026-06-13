@@ -21,7 +21,6 @@ jobs:
     env:
       SCHEME: IdasenDesk
       CONFIGURATION: Release
-      DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
 
     steps:
       - name: Check out repository
@@ -48,6 +47,7 @@ jobs:
 
       - name: Build app
         run: |
+          DERIVED_DATA_PATH="$RUNNER_TEMP/DerivedData"
           xcodebuild \
             -scheme "$SCHEME" \
             -configuration "$CONFIGURATION" \
@@ -60,6 +60,7 @@ jobs:
 
       - name: Package app
         run: |
+          DERIVED_DATA_PATH="$RUNNER_TEMP/DerivedData"
           APP_PATH="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION/Idasen Desk.app"
           if [ ! -d "$APP_PATH" ]; then
             echo "App bundle not found at $APP_PATH"
