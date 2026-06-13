@@ -18,6 +18,7 @@ final class AppModel {
     private let movementCoordinator: MovementCoordinator
     private let autoStandScheduler: AutoStandScheduler
     private let shortcutManager: ShortcutManager
+    private let softwareUpdateController: SoftwareUpdateController
     private var eventTask: Task<Void, Never>?
     private var hasStarted = false
 
@@ -25,13 +26,15 @@ final class AppModel {
         service: any DeskService,
         settingsStore: SettingsStore,
         autoStandScheduler: AutoStandScheduler,
-        shortcutManager: ShortcutManager
+        shortcutManager: ShortcutManager,
+        softwareUpdateController: SoftwareUpdateController
     ) {
         self.service = service
         self.settingsStore = settingsStore
         self.settings = settingsStore.load()
         self.autoStandScheduler = autoStandScheduler
         self.shortcutManager = shortcutManager
+        self.softwareUpdateController = softwareUpdateController
         self.movementCoordinator = MovementCoordinator(transport: ServiceTransport(service: service))
         configureAutomation()
         configureShortcuts()
@@ -42,7 +45,8 @@ final class AppModel {
             service: BluetoothDeskService(),
             settingsStore: SettingsStore(),
             autoStandScheduler: AutoStandScheduler(),
-            shortcutManager: ShortcutManager()
+            shortcutManager: ShortcutManager(),
+            softwareUpdateController: SoftwareUpdateController()
         )
     }
 
@@ -179,6 +183,10 @@ final class AppModel {
             lastError = error.localizedDescription
             launchAtLoginEnabled = LoginItemController.isEnabled
         }
+    }
+
+    func checkForUpdates() {
+        softwareUpdateController.checkForUpdates()
     }
 
     func stopForLifecycleEvent() {
@@ -354,4 +362,3 @@ extension DeskConnectionState {
         }
     }
 }
-

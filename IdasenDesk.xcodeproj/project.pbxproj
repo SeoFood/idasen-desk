@@ -30,10 +30,12 @@
 		77F3B3381F4749E7377CBCE3 /* UnitConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3A0B26683944161B36D459 /* UnitConversion.swift */; };
 		7B298B7592BA64BB97DDE32D /* CommandParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8583DF93DEC37B095B3F291 /* CommandParsing.swift */; };
 		7B968394380E8B826A4717E5 /* deskcontroller.sdef in Resources */ = {isa = PBXBuildFile; fileRef = CFEF6310DEB83DA3093BF61E /* deskcontroller.sdef */; };
+		7BD16470AE8B5FE620A23EBC /* SoftwareUpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827F65450BA0EEE632F9F831 /* SoftwareUpdateController.swift */; };
 		9B7CBDA9204880E53D50B40D /* ShortcutsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BDDC373FE7959B4D92C6BA /* ShortcutsSettingsView.swift */; };
 		9C5B82961F2F021601635806 /* MoveDeskToHeightCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5380AC479D2E10E8BBE1BF /* MoveDeskToHeightCommand.swift */; };
 		9F1628B9195437233917ACAF /* AdvancedSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD05B2C47F7DB06912352C1 /* AdvancedSettingsView.swift */; };
 		A27A11757E3D652CDF385D44 /* LoginItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */; };
+		A3C0E92AA93EC6D5C14832B4 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 02D31086DA638D432EE22A7C /* Sparkle */; };
 		AF39386AFB300BC256DA7694 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CE0FA49AC645836CBF9C7F /* GeneralSettingsView.swift */; };
 		B3403FE70687A265DB9E42E3 /* IdasenBLEProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2037BF843DE0ECE8F9BB8E3E /* IdasenBLEProtocol.swift */; };
 		B6C824676B5DACFD9881E55A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D2278F2B1B2AB1CBB783ED /* AppKit.framework */; };
@@ -108,6 +110,7 @@
 		6D556C12206B6B544862E45C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F119F3229679D87412A27DB /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		6F1518205B080C6FBF102D57 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		827F65450BA0EEE632F9F831 /* SoftwareUpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateController.swift; sourceTree = "<group>"; };
 		83514AE84DD593618E098546 /* ShortcutValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutValidationTests.swift; sourceTree = "<group>"; };
 		844B67E9477778304B8598D9 /* IdasenDeskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdasenDeskApp.swift; sourceTree = "<group>"; };
 		8A3A3D451CFF6702D81F0C7B /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1036EBFF3BC33C6C43225CB3 /* libIdasenDeskCore.a in Frameworks */,
+				A3C0E92AA93EC6D5C14832B4 /* Sparkle in Frameworks */,
 				B6C824676B5DACFD9881E55A /* AppKit.framework in Frameworks */,
 				EE6294607DE8C935D9A205CC /* SwiftUI.framework in Frameworks */,
 				E9E05C2080A49D41744D1394 /* AppIntents.framework in Frameworks */,
@@ -176,6 +180,7 @@
 				C1A94DB87BAEE421F29A5D52 /* AppModel.swift */,
 				844B67E9477778304B8598D9 /* IdasenDeskApp.swift */,
 				BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */,
+				827F65450BA0EEE632F9F831 /* SoftwareUpdateController.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -422,6 +427,7 @@
 			);
 			name = IdasenDesk;
 			packageProductDependencies = (
+				02D31086DA638D432EE22A7C /* Sparkle */,
 			);
 			productName = IdasenDesk;
 			productReference = A70C1CBADCADB5AF45544A57 /* IdasenDesk.app */;
@@ -506,6 +512,9 @@
 			);
 			mainGroup = 3C3BA2937AEBB9FFC4F10ACC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A022FB4E6CB97AA0E81C8A3C /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 15099E0862702EE28F49754F /* Products */;
 			projectDirPath = "";
@@ -613,6 +622,7 @@
 				FD9BCAD06CBFEBBA5C9DE9A1 /* OnboardingWindowPresenter.swift in Sources */,
 				2D127EC12DD298A1D21CA9DE /* SettingsView.swift in Sources */,
 				9B7CBDA9204880E53D50B40D /* ShortcutsSettingsView.swift in Sources */,
+				7BD16470AE8B5FE620A23EBC /* SoftwareUpdateController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,14 +654,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = Sources/IdasenDeskApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -905,14 +915,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = Sources/IdasenDeskApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -973,6 +983,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A022FB4E6CB97AA0E81C8A3C /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		02D31086DA638D432EE22A7C /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A022FB4E6CB97AA0E81C8A3C /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 75A2DD7B4804BD781BA026AD /* Project object */;
 }

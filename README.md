@@ -16,6 +16,12 @@ xcodegen generate
 xcodebuild -scheme IdasenDesk -destination 'platform=macOS' build
 ```
 
+## Release
+
+Tag releases use GitHub Actions to build the app, attach the ZIP, and generate a
+Sparkle appcast. The workflow expects `SPARKLE_PRIVATE_KEY` to be configured as a
+repository secret. The app reads updates from the latest release's `appcast.xml`.
+
 ## Scope
 
 This is a greenfield SwiftUI app. It does not migrate preferences or code from the

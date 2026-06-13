@@ -3,6 +3,10 @@ options:
   bundleIdPrefix: com.seofood
   deploymentTarget:
     macOS: "14.0"
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.9.3
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -34,6 +38,8 @@ targets:
     info:
       path: Sources/IdasenDeskApp/Resources/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.utilities
         LSUIElement: true
         NSAppleScriptEnabled: true
@@ -41,21 +47,29 @@ targets:
         NSBluetoothPeripheralUsageDescription: Idasen Desk needs Bluetooth access to discover, connect to, and move your desk.
         NSPrincipalClass: NSApplication
         OSAScriptingDefinition: deskcontroller.sdef
+        SUEnableInstallerLauncherService: true
+        SUFeedURL: https://github.com/SeoFood/idasen-desk/releases/latest/download/appcast.xml
+        SUPublicEDKey: jrPUdaIm0Thw9nLQLAjztKligkD7oyAfR7VzjKohMT4=
     entitlements:
       path: Sources/IdasenDeskApp/Resources/IdasenDesk.entitlements
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.device.bluetooth: true
+        com.apple.security.network.client: true
+        com.apple.security.temporary-exception.mach-lookup.global-name:
+          - $(PRODUCT_BUNDLE_IDENTIFIER)-spks
+          - $(PRODUCT_BUNDLE_IDENTIFIER)-spki
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDesk
         PRODUCT_NAME: Idasen Desk
         PRODUCT_MODULE_NAME: IdasenDesk
-        MARKETING_VERSION: 0.1.0
-        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 0.1.1
+        CURRENT_PROJECT_VERSION: 2
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     dependencies:
       - target: IdasenDeskCore
+      - package: Sparkle
       - sdk: AppKit.framework
       - sdk: SwiftUI.framework
       - sdk: AppIntents.framework

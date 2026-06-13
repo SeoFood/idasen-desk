@@ -39,8 +39,13 @@ struct IdasenDeskApp: App {
                     model.stop()
                 }
                 .keyboardShortcut(.space, modifiers: [.command, .option])
+
+                Divider()
+
+                Button("Check for Updates...") {
+                    model.checkForUpdates()
+                }
             }
         }
     }
 }
-

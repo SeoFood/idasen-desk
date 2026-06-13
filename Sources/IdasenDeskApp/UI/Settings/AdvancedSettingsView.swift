@@ -23,6 +23,11 @@ struct AdvancedSettingsView: View {
                 } label: {
                     Label("Stop", systemImage: "stop.fill")
                 }
+                Button {
+                    model.checkForUpdates()
+                } label: {
+                    Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
+                }
             }
 
             Divider()
@@ -34,4 +39,3 @@ struct AdvancedSettingsView: View {
         }
     }
 }
-

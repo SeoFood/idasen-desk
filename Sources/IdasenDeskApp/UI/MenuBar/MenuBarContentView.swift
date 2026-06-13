@@ -107,6 +107,11 @@ struct MenuBarContentView: View {
             } label: {
                 Label("Diagnostics", systemImage: "waveform.path.ecg")
             }
+            Button {
+                model.checkForUpdates()
+            } label: {
+                Label("Updates", systemImage: "arrow.triangle.2.circlepath")
+            }
             Spacer()
             Button("Quit") {
                 NSApp.terminate(nil)
@@ -169,4 +174,3 @@ private struct HoldButton: View {
             .accessibilityAddTraits(.isButton)
     }
 }
-
