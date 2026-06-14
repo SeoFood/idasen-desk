@@ -38,6 +38,7 @@ public actor MovementCoordinator {
     private var lastMovementAt: Date?
     private var previousHeight: DeskHeight?
     private var currentDirection: MovementDirection = .none
+    private var commandLoopTask: Task<Void, Never>?
 
     public init(
         transport: DeskCommandTransport,
@@ -50,30 +51,39 @@ public actor MovementCoordinator {
     }
 
     public func move(to height: DeskHeight) async {
+        cancelCommandLoop()
         targetHeight = height
         movementStartedAt = now()
         lastMovementAt = now()
+        lastCommandDate = nil
         previousHeight = latestSnapshot?.currentHeight
+        currentDirection = .none
+        startCommandLoop()
         await evaluateMovement()
     }
 
     public func moveUp() async {
+        cancelCommandLoop()
         targetHeight = nil
         previousHeight = nil
         currentDirection = .up
-        lastCommandDate = now()
-        await transport.send(.moveUp)
+        lastCommandDate = nil
+        startCommandLoop()
+        await sendCommand(for: .up, at: now())
     }
 
     public func moveDown() async {
+        cancelCommandLoop()
         targetHeight = nil
         previousHeight = nil
         currentDirection = .down
-        lastCommandDate = now()
-        await transport.send(.moveDown)
+        lastCommandDate = nil
+        startCommandLoop()
+        await sendCommand(for: .down, at: now())
     }
 
     public func stop() async {
+        cancelCommandLoop()
         targetHeight = nil
         previousHeight = nil
         currentDirection = .none
@@ -86,13 +96,13 @@ public actor MovementCoordinator {
     }
 
     private func evaluateMovement() async {
-        guard let targetHeight, let height = latestSnapshot?.currentHeight else {
-            return
-        }
-
         let currentDate = now()
         if hasTimedOut(at: currentDate) {
             await stop()
+            return
+        }
+
+        guard let targetHeight, let height = latestSnapshot?.currentHeight else {
             return
         }
 
@@ -112,13 +122,62 @@ public actor MovementCoordinator {
         }
 
         if targetHeight > height {
-            currentDirection = .up
-            lastCommandDate = currentDate
-            await transport.send(.moveUp)
+            await sendCommand(for: .up, at: currentDate)
         } else {
-            currentDirection = .down
-            lastCommandDate = currentDate
+            await sendCommand(for: .down, at: currentDate)
+        }
+    }
+
+    private func startCommandLoop() {
+        commandLoopTask = Task { [configuration] in
+            while !Task.isCancelled {
+                let delay = UInt64(configuration.minCommandInterval * 1_000_000_000)
+                try? await Task.sleep(nanoseconds: delay)
+                guard !Task.isCancelled else {
+                    return
+                }
+                await self.tickCommandLoop()
+            }
+        }
+    }
+
+    private func cancelCommandLoop() {
+        commandLoopTask?.cancel()
+        commandLoopTask = nil
+    }
+
+    private func tickCommandLoop() async {
+        if targetHeight != nil {
+            await evaluateMovement()
+            return
+        }
+
+        let currentDate = now()
+        guard canSendCommand(at: currentDate) else {
+            return
+        }
+
+        switch currentDirection {
+        case .up:
+            await sendCommand(for: .up, at: currentDate)
+        case .down:
+            await sendCommand(for: .down, at: currentDate)
+        case .none:
+            cancelCommandLoop()
+        }
+    }
+
+    private func sendCommand(for direction: MovementDirection, at date: Date) async {
+        currentDirection = direction
+        lastCommandDate = date
+
+        switch direction {
+        case .up:
+            await transport.send(.moveUp)
+        case .down:
             await transport.send(.moveDown)
+        case .none:
+            break
         }
     }
 
@@ -162,4 +221,3 @@ private enum MovementDirection {
     case down
     case none
 }
-
