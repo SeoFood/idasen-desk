@@ -13,6 +13,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
     private var discoveredPeripherals: [DeskID: CBPeripheral] = [:]
     private var peripheralsByIdentifier: [UUID: PeripheralState] = [:]
     private var activeDeskID: DeskID?
+    private var positionPollTimer: DispatchSourceTimer?
 
     public override init() {
         super.init()
@@ -52,6 +53,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             guard let self else {
                 return
             }
+            self.stopPositionPolling()
             self.sendOnQueue(.stop)
             if let id = self.activeDeskID, let peripheral = self.discoveredPeripherals[id] {
                 self.centralManager?.cancelPeripheralConnection(peripheral)
@@ -84,7 +86,40 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
         }
 
         peripheral.writeValue(data, for: characteristic, type: .withResponse)
+        readPosition(for: peripheral)
         broadcaster.yield(.commandSent(command))
+    }
+
+    private func startPositionPolling(for peripheral: CBPeripheral) {
+        stopPositionPolling()
+
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + .milliseconds(250), repeating: .milliseconds(500))
+        timer.setEventHandler { [weak self, weak peripheral] in
+            guard let self, let peripheral else {
+                return
+            }
+            self.readPosition(for: peripheral)
+        }
+        positionPollTimer = timer
+        timer.resume()
+    }
+
+    private func stopPositionPolling() {
+        positionPollTimer?.cancel()
+        positionPollTimer = nil
+    }
+
+    private func readPosition(for peripheral: CBPeripheral) {
+        guard
+            activeDeskID?.rawValue == peripheral.identifier.uuidString,
+            let state = peripheralsByIdentifier[peripheral.identifier],
+            let characteristic = state.positionCharacteristic
+        else {
+            return
+        }
+
+        peripheral.readValue(for: characteristic)
     }
 
     private func snapshot(for peripheral: CBPeripheral, rssi: NSNumber? = nil, state: DeskConnectionState) -> DeskSnapshot {
@@ -159,12 +194,16 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
 
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         if activeDeskID?.rawValue == peripheral.identifier.uuidString {
+            stopPositionPolling()
             activeDeskID = nil
         }
         broadcaster.yield(.connectionStateChanged(DeskID(rawValue: peripheral.identifier.uuidString), .disconnected))
     }
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        if activeDeskID?.rawValue == peripheral.identifier.uuidString {
+            stopPositionPolling()
+        }
         let message = error?.localizedDescription ?? "Failed to connect"
         broadcaster.yield(.connectionStateChanged(DeskID(rawValue: peripheral.identifier.uuidString), .failed(message)))
     }
@@ -195,6 +234,7 @@ extension BluetoothDeskService: CBPeripheralDelegate {
                 state.positionCharacteristic = characteristic
                 peripheral.readValue(for: characteristic)
                 peripheral.setNotifyValue(true, for: characteristic)
+                startPositionPolling(for: peripheral)
             }
 
             if characteristic.uuid == IdasenBLEProtocol.controlCharacteristicUUID {
@@ -237,4 +277,3 @@ private struct PeripheralState {
     var height: DeskHeight?
     var speed: Double = 0
 }
-

@@ -21,6 +21,7 @@ final class AppModel {
     private let softwareUpdateController: SoftwareUpdateController
     private var eventTask: Task<Void, Never>?
     private var hasStarted = false
+    private var connectionRequestInFlight: DeskID?
 
     init(
         service: any DeskService,
@@ -71,11 +72,13 @@ final class AppModel {
             settings.activeDeskID = snapshot.id
             settings.hasCompletedOnboarding = true
         }
+        connectionRequestInFlight = snapshot.id
         service.connect(to: snapshot.id)
     }
 
     func connect(to id: DeskID) {
         updateSettings { $0.activeDeskID = id }
+        connectionRequestInFlight = id
         service.connect(to: id)
     }
 
@@ -213,8 +216,12 @@ final class AppModel {
             connectionState = .scanning
         case .discovered(let snapshot):
             upsert(snapshot)
+            connectToActiveDeskIfNeeded(snapshot)
         case .connectionStateChanged(let id, let state):
             connectionState = state
+            if id == connectionRequestInFlight, state.isTerminalConnectionAttemptState {
+                connectionRequestInFlight = nil
+            }
             if id == settings.activeDeskID {
                 activeSnapshot?.connectionState = state
             }
@@ -248,6 +255,19 @@ final class AppModel {
         if snapshot.id == settings.activeDeskID {
             activeSnapshot = snapshot
         }
+    }
+
+    private func connectToActiveDeskIfNeeded(_ snapshot: DeskSnapshot) {
+        guard
+            snapshot.id == settings.activeDeskID,
+            connectionRequestInFlight != snapshot.id,
+            !connectionState.isConnectedOrConnecting
+        else {
+            return
+        }
+
+        connectionRequestInFlight = snapshot.id
+        service.connect(to: snapshot.id)
     }
 
     private var activeDeskName: String {
@@ -322,6 +342,26 @@ private struct ServiceTransport: DeskCommandTransport {
 
     func send(_ command: DeskCommand) async {
         service.send(command)
+    }
+}
+
+private extension DeskConnectionState {
+    var isConnectedOrConnecting: Bool {
+        switch self {
+        case .connecting, .connected:
+            return true
+        case .disconnected, .scanning, .bluetoothUnavailable, .unauthorized, .failed:
+            return false
+        }
+    }
+
+    var isTerminalConnectionAttemptState: Bool {
+        switch self {
+        case .connected, .disconnected, .bluetoothUnavailable, .unauthorized, .failed:
+            return true
+        case .scanning, .connecting:
+            return false
+        }
     }
 }
 
