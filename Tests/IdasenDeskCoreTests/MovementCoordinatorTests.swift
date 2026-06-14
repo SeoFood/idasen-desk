@@ -56,6 +56,31 @@ final class MovementCoordinatorTests: XCTestCase {
         XCTAssertEqual(transport.commands.last, .stop)
     }
 
+    func testSmallContinuousHeightChangesDoNotTriggerStall() async {
+        let transport = RecordingTransport()
+        let dateProvider = TestDateProvider(Date(timeIntervalSince1970: 0))
+        let coordinator = MovementCoordinator(
+            transport: transport,
+            configuration: MovementConfiguration(
+                minCommandInterval: 0.1,
+                minMovementDelta: 0.5,
+                movementTimeout: 30,
+                stallTimeout: 2
+            ),
+            now: dateProvider.now
+        )
+
+        await coordinator.handleSnapshot(snapshot(height: 70))
+        await coordinator.move(to: DeskHeight(centimeters: 90))
+
+        for step in 1...8 {
+            dateProvider.advance(by: 0.4)
+            await coordinator.handleSnapshot(snapshot(height: 70 + Double(step) * 0.3))
+        }
+
+        XCTAssertNotEqual(transport.commands.last, .stop)
+    }
+
     func testContinuesSendingCommandsTowardTargetWithoutNewSnapshot() async {
         let transport = RecordingTransport()
         let dateProvider = TestDateProvider(Date(timeIntervalSince1970: 0))

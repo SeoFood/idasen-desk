@@ -36,7 +36,7 @@ public actor MovementCoordinator {
     private var lastCommandDate: Date?
     private var movementStartedAt: Date?
     private var lastMovementAt: Date?
-    private var previousHeight: DeskHeight?
+    private var progressReferenceHeight: DeskHeight?
     private var currentDirection: MovementDirection = .none
     private var commandLoopTask: Task<Void, Never>?
 
@@ -56,7 +56,7 @@ public actor MovementCoordinator {
         movementStartedAt = now()
         lastMovementAt = now()
         lastCommandDate = nil
-        previousHeight = latestSnapshot?.currentHeight
+        progressReferenceHeight = latestSnapshot?.currentHeight
         currentDirection = .none
         startCommandLoop()
         await evaluateMovement()
@@ -65,7 +65,7 @@ public actor MovementCoordinator {
     public func moveUp() async {
         cancelCommandLoop()
         targetHeight = nil
-        previousHeight = nil
+        progressReferenceHeight = nil
         currentDirection = .up
         lastCommandDate = nil
         startCommandLoop()
@@ -75,7 +75,7 @@ public actor MovementCoordinator {
     public func moveDown() async {
         cancelCommandLoop()
         targetHeight = nil
-        previousHeight = nil
+        progressReferenceHeight = nil
         currentDirection = .down
         lastCommandDate = nil
         startCommandLoop()
@@ -85,7 +85,7 @@ public actor MovementCoordinator {
     public func stop() async {
         cancelCommandLoop()
         targetHeight = nil
-        previousHeight = nil
+        progressReferenceHeight = nil
         currentDirection = .none
         await transport.send(.stop)
     }
@@ -203,15 +203,15 @@ public actor MovementCoordinator {
     }
 
     private func updateMovementProgress(height: DeskHeight, at date: Date) {
-        defer { previousHeight = height }
-
-        guard let previousHeight else {
+        guard let progressReferenceHeight else {
+            self.progressReferenceHeight = height
             lastMovementAt = date
             return
         }
 
-        if abs(height.centimeters - previousHeight.centimeters) >= configuration.minMovementDelta {
+        if abs(height.centimeters - progressReferenceHeight.centimeters) >= configuration.minMovementDelta {
             lastMovementAt = date
+            self.progressReferenceHeight = height
         }
     }
 }
