@@ -22,6 +22,8 @@ final class AppModel {
     private var eventTask: Task<Void, Never>?
     private var hasStarted = false
     private var connectionRequestInFlight: DeskID?
+    private var recentDiagnosticMessages: [String: Date] = [:]
+    private let duplicateDiagnosticSuppressionInterval: TimeInterval = 5
 
     init(
         service: any DeskService,
@@ -208,8 +210,7 @@ final class AppModel {
     }
 
     private func handle(_ event: DeskEvent) {
-        diagnostics.insert(describe(event), at: 0)
-        diagnostics = Array(diagnostics.prefix(200))
+        recordDiagnostic(for: event)
 
         switch event {
         case .scanStarted:
@@ -235,6 +236,7 @@ final class AppModel {
             snapshot.connectionState = .connected
             snapshot.lastSeen = Date()
             activeSnapshot = snapshot
+            upsert(snapshot)
             Task {
                 await movementCoordinator.handleSnapshot(snapshot)
             }
@@ -243,6 +245,24 @@ final class AppModel {
         case .error(let message):
             lastError = message
         }
+    }
+
+    private func recordDiagnostic(for event: DeskEvent) {
+        let message = describe(event)
+        let now = Date()
+
+        if let lastSeen = recentDiagnosticMessages[message],
+           now.timeIntervalSince(lastSeen) < duplicateDiagnosticSuppressionInterval {
+            recentDiagnosticMessages[message] = now
+            return
+        }
+
+        recentDiagnosticMessages[message] = now
+        recentDiagnosticMessages = recentDiagnosticMessages.filter {
+            now.timeIntervalSince($0.value) < duplicateDiagnosticSuppressionInterval
+        }
+        diagnostics.insert(message, at: 0)
+        diagnostics = Array(diagnostics.prefix(200))
     }
 
     private func upsert(_ snapshot: DeskSnapshot) {

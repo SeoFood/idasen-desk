@@ -28,9 +28,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             if self.centralManager == nil {
                 self.centralManager = CBCentralManager(delegate: self, queue: self.queue)
             } else if self.centralManager?.state == .poweredOn {
-                self.centralManager?.scanForPeripherals(withServices: nil, options: [
-                    CBCentralManagerScanOptionAllowDuplicatesKey: true
-                ])
+                self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
             }
         }
     }
@@ -153,9 +151,7 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
         switch central.state {
         case .poweredOn:
             broadcaster.yield(.connectionStateChanged(nil, .scanning))
-            central.scanForPeripherals(withServices: nil, options: [
-                CBCentralManagerScanOptionAllowDuplicatesKey: true
-            ])
+            central.scanForPeripherals(withServices: nil, options: nil)
         case .unauthorized:
             broadcaster.yield(.connectionStateChanged(nil, .unauthorized))
         case .poweredOff, .unsupported:
@@ -265,7 +261,6 @@ extension BluetoothDeskService: CBPeripheralDelegate {
 
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
         broadcaster.yield(.heightChanged(id, sample.height, speed: sample.speed))
-        broadcaster.yield(.discovered(snapshot(for: peripheral, state: .connected)))
     }
 }
 
