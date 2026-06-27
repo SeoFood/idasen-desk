@@ -24,6 +24,9 @@ final class AppModel {
     private var connectionRequestInFlight: DeskID?
     private var recentDiagnosticMessages: [String: Date] = [:]
     private let duplicateDiagnosticSuppressionInterval: TimeInterval = 5
+    private let routineHeightDiagnosticSuppressionInterval: TimeInterval = 15
+    private let repeatedDiscoveryDiagnosticSuppressionInterval: TimeInterval = 30
+    private let diagnosticDateRetentionInterval: TimeInterval = 60
 
     init(
         service: any DeskService,
@@ -258,21 +261,44 @@ final class AppModel {
     }
 
     private func recordDiagnostic(for event: DeskEvent) {
-        let message = describe(event)
-        let now = Date()
-
-        if let lastSeen = recentDiagnosticMessages[message],
-           now.timeIntervalSince(lastSeen) < duplicateDiagnosticSuppressionInterval {
-            recentDiagnosticMessages[message] = now
+        if case .heightChanged(let id, _, _) = event, id != settings.activeDeskID {
             return
         }
 
-        recentDiagnosticMessages[message] = now
+        let message = describe(event)
+        let diagnostic = diagnosticKeyAndSuppressionInterval(for: event)
+        let now = Date()
+
+        if let lastSeen = recentDiagnosticMessages[diagnostic.key],
+           now.timeIntervalSince(lastSeen) < diagnostic.suppressionInterval {
+            recentDiagnosticMessages[diagnostic.key] = now
+            return
+        }
+
+        recentDiagnosticMessages[diagnostic.key] = now
         recentDiagnosticMessages = recentDiagnosticMessages.filter {
-            now.timeIntervalSince($0.value) < duplicateDiagnosticSuppressionInterval
+            now.timeIntervalSince($0.value) < diagnosticDateRetentionInterval
         }
         diagnostics.insert(message, at: 0)
         diagnostics = Array(diagnostics.prefix(200))
+    }
+
+    private func diagnosticKeyAndSuppressionInterval(for event: DeskEvent) -> (key: String, suppressionInterval: TimeInterval) {
+        switch event {
+        case .scanStarted:
+            return ("scanStarted", duplicateDiagnosticSuppressionInterval)
+        case .discovered(let snapshot):
+            return ("discovered:\(snapshot.id.rawValue)", repeatedDiscoveryDiagnosticSuppressionInterval)
+        case .connectionStateChanged(let id, let state):
+            return ("connection:\(id?.rawValue ?? "global"):\(state.displayName)", duplicateDiagnosticSuppressionInterval)
+        case .heightChanged(let id, let height, _):
+            let roundedHeight = Int(height.centimeters.rounded())
+            return ("height:\(id.rawValue):\(roundedHeight)", routineHeightDiagnosticSuppressionInterval)
+        case .commandSent(let command):
+            return ("command:\(command.displayName)", duplicateDiagnosticSuppressionInterval)
+        case .error(let message):
+            return ("error:\(message)", duplicateDiagnosticSuppressionInterval)
+        }
     }
 
     private func upsert(_ snapshot: DeskSnapshot) {
