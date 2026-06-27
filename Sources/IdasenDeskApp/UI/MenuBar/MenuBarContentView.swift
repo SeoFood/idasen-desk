@@ -15,6 +15,9 @@ struct MenuBarContentView: View {
             footer
         }
         .padding(14)
+        .onAppear {
+            model.reconnectActiveDesk()
+        }
     }
 
     private var header: some View {

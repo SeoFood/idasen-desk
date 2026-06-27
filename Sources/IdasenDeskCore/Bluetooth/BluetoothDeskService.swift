@@ -14,6 +14,8 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
     private var peripheralsByIdentifier: [UUID: PeripheralState] = [:]
     private var activeDeskID: DeskID?
     private var positionPollTimer: DispatchSourceTimer?
+    private var pendingCommands = BluetoothPendingCommandQueue()
+    private var inFlightCommandsByPeripheralIdentifier: [UUID: DeskCommand] = [:]
 
     public override init() {
         super.init()
@@ -35,14 +37,25 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
 
     public func connect(to id: DeskID) {
         queue.async { [weak self] in
-            guard let self, let peripheral = self.discoveredPeripherals[id] else {
-                self?.broadcaster.yield(.connectionStateChanged(id, .failed("Desk not found")))
+            guard let self else {
                 return
             }
 
             self.activeDeskID = id
             self.broadcaster.yield(.connectionStateChanged(id, .connecting))
-            self.centralManager?.connect(peripheral, options: nil)
+            if self.centralManager == nil {
+                self.centralManager = CBCentralManager(delegate: self, queue: self.queue)
+            }
+
+            guard let peripheral = self.discoveredPeripherals[id] else {
+                if self.centralManager?.state == .poweredOn {
+                    self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
+                }
+                return
+            }
+
+            self.reconnectIfNeeded(to: id, peripheral: peripheral)
+            self.flushPendingCommandIfReady(for: peripheral)
         }
     }
 
@@ -57,6 +70,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
                 self.centralManager?.cancelPeripheralConnection(peripheral)
             }
             self.activeDeskID = nil
+            self.pendingCommands.clear()
             self.broadcaster.yield(.connectionStateChanged(nil, .disconnected))
         }
     }
@@ -73,19 +87,112 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             return
         }
 
-        guard
-            let id = activeDeskID,
-            let peripheral = discoveredPeripherals[id],
-            let state = peripheralsByIdentifier[peripheral.identifier],
-            let characteristic = state.controlCharacteristic
-        else {
+        guard let id = activeDeskID else {
+            if command == .stop {
+                pendingCommands.clear()
+                return
+            }
             broadcaster.yield(.error("No connected desk control characteristic is available"))
             return
         }
 
+        guard let peripheral = discoveredPeripherals[id] else {
+            pendingCommands.enqueue(command)
+            guard command.isRetryableAfterReconnect else {
+                return
+            }
+
+            if centralManager == nil {
+                centralManager = CBCentralManager(delegate: self, queue: queue)
+            } else if centralManager?.state == .poweredOn {
+                broadcaster.yield(.connectionStateChanged(id, .connecting))
+                centralManager?.scanForPeripherals(withServices: nil, options: nil)
+            }
+            return
+        }
+
+        guard peripheral.state == .connected else {
+            queueForReconnect(command, id: id, peripheral: peripheral)
+            return
+        }
+
+        guard
+            let state = peripheralsByIdentifier[peripheral.identifier],
+            let characteristic = state.controlCharacteristic
+        else {
+            queueForReconnect(command, id: id, peripheral: peripheral)
+            peripheral.discoverServices([
+                IdasenBLEProtocol.positionServiceUUID,
+                IdasenBLEProtocol.controlServiceUUID
+            ])
+            return
+        }
+
+        inFlightCommandsByPeripheralIdentifier[peripheral.identifier] = command
         peripheral.writeValue(data, for: characteristic, type: .withResponse)
         readPosition(for: peripheral)
         broadcaster.yield(.commandSent(command))
+    }
+
+    private func queueForReconnect(_ command: DeskCommand, id: DeskID, peripheral: CBPeripheral) {
+        pendingCommands.enqueue(command)
+
+        guard command.isRetryableAfterReconnect else {
+            return
+        }
+
+        reconnectIfNeeded(to: id, peripheral: peripheral)
+    }
+
+    private func reconnectIfNeeded(to id: DeskID, peripheral: CBPeripheral) {
+        guard let centralManager else {
+            broadcaster.yield(.error("Bluetooth is not ready"))
+            return
+        }
+
+        guard centralManager.state == .poweredOn else {
+            return
+        }
+
+        switch peripheral.state {
+        case .connected:
+            peripheral.discoverServices([
+                IdasenBLEProtocol.positionServiceUUID,
+                IdasenBLEProtocol.controlServiceUUID
+            ])
+        case .connecting, .disconnecting:
+            broadcaster.yield(.connectionStateChanged(id, .connecting))
+        case .disconnected:
+            broadcaster.yield(.connectionStateChanged(id, .connecting))
+            centralManager.connect(peripheral, options: nil)
+        @unknown default:
+            broadcaster.yield(.connectionStateChanged(id, .connecting))
+            centralManager.connect(peripheral, options: nil)
+        }
+    }
+
+    private func resetConnectionState(for peripheral: CBPeripheral) {
+        stopPositionPolling()
+        var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
+        state.peripheral = peripheral
+        state.positionCharacteristic = nil
+        state.controlCharacteristic = nil
+        state.speed = 0
+        peripheralsByIdentifier[peripheral.identifier] = state
+        inFlightCommandsByPeripheralIdentifier[peripheral.identifier] = nil
+    }
+
+    private func flushPendingCommandIfReady(for peripheral: CBPeripheral) {
+        guard
+            peripheral.state == .connected,
+            let state = peripheralsByIdentifier[peripheral.identifier],
+            state.isReadyForCommands,
+            let command = pendingCommands.take()
+        else {
+            return
+        }
+
+        sendOnQueue(command)
     }
 
     private func startPositionPolling(for peripheral: CBPeripheral) {
@@ -152,6 +259,9 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
         case .poweredOn:
             broadcaster.yield(.connectionStateChanged(nil, .scanning))
             central.scanForPeripherals(withServices: nil, options: nil)
+            if let id = activeDeskID, let peripheral = discoveredPeripherals[id] {
+                reconnectIfNeeded(to: id, peripheral: peripheral)
+            }
         case .unauthorized:
             broadcaster.yield(.connectionStateChanged(nil, .unauthorized))
         case .poweredOff, .unsupported:
@@ -175,33 +285,51 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
 
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
         discoveredPeripherals[id] = peripheral
-        peripheralsByIdentifier[peripheral.identifier, default: PeripheralState(peripheral: peripheral)].name = peripheral.name
+        var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
+        state.peripheral = peripheral
+        state.name = peripheral.name
+        peripheralsByIdentifier[peripheral.identifier] = state
         broadcaster.yield(.discovered(snapshot(for: peripheral, rssi: RSSI, state: .disconnected)))
+
+        if id == activeDeskID, peripheral.state == .disconnected {
+            reconnectIfNeeded(to: id, peripheral: peripheral)
+        }
     }
 
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheral.delegate = self
+        let id = DeskID(rawValue: peripheral.identifier.uuidString)
+        discoveredPeripherals[id] = peripheral
+        var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
+        state.peripheral = peripheral
+        peripheralsByIdentifier[peripheral.identifier] = state
         peripheral.discoverServices([
             IdasenBLEProtocol.positionServiceUUID,
             IdasenBLEProtocol.controlServiceUUID
         ])
-        broadcaster.yield(.connectionStateChanged(DeskID(rawValue: peripheral.identifier.uuidString), .connected))
+        broadcaster.yield(.connectionStateChanged(id, .connecting))
     }
 
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        let id = DeskID(rawValue: peripheral.identifier.uuidString)
         if activeDeskID?.rawValue == peripheral.identifier.uuidString {
-            stopPositionPolling()
-            activeDeskID = nil
+            resetConnectionState(for: peripheral)
+            broadcaster.yield(.connectionStateChanged(id, .disconnected))
+            reconnectIfNeeded(to: id, peripheral: peripheral)
+            return
         }
-        broadcaster.yield(.connectionStateChanged(DeskID(rawValue: peripheral.identifier.uuidString), .disconnected))
+        resetConnectionState(for: peripheral)
+        broadcaster.yield(.connectionStateChanged(id, .disconnected))
     }
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        let id = DeskID(rawValue: peripheral.identifier.uuidString)
         if activeDeskID?.rawValue == peripheral.identifier.uuidString {
-            stopPositionPolling()
+            resetConnectionState(for: peripheral)
+            central.scanForPeripherals(withServices: nil, options: nil)
         }
         let message = error?.localizedDescription ?? "Failed to connect"
-        broadcaster.yield(.connectionStateChanged(DeskID(rawValue: peripheral.identifier.uuidString), .failed(message)))
+        broadcaster.yield(.connectionStateChanged(id, .failed(message)))
     }
 }
 
@@ -239,6 +367,12 @@ extension BluetoothDeskService: CBPeripheralDelegate {
         }
 
         peripheralsByIdentifier[peripheral.identifier] = state
+
+        if state.isReadyForCommands {
+            let id = DeskID(rawValue: peripheral.identifier.uuidString)
+            broadcaster.yield(.connectionStateChanged(id, .connected))
+            flushPendingCommandIfReady(for: peripheral)
+        }
     }
 
     public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -262,6 +396,50 @@ extension BluetoothDeskService: CBPeripheralDelegate {
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
         broadcaster.yield(.heightChanged(id, sample.height, speed: sample.speed))
     }
+
+    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard let error else {
+            inFlightCommandsByPeripheralIdentifier[peripheral.identifier] = nil
+            return
+        }
+
+        let id = DeskID(rawValue: peripheral.identifier.uuidString)
+        if let command = inFlightCommandsByPeripheralIdentifier[peripheral.identifier] {
+            pendingCommands.enqueue(command)
+        }
+        resetConnectionState(for: peripheral)
+        broadcaster.yield(.error("Bluetooth write failed: \(error.localizedDescription)"))
+
+        if activeDeskID == id {
+            if peripheral.state == .connected {
+                centralManager?.cancelPeripheralConnection(peripheral)
+            } else {
+                reconnectIfNeeded(to: id, peripheral: peripheral)
+            }
+        }
+    }
+}
+
+struct BluetoothPendingCommandQueue: Sendable, Equatable {
+    private(set) var command: DeskCommand?
+
+    mutating func enqueue(_ command: DeskCommand) {
+        guard command.isRetryableAfterReconnect else {
+            clear()
+            return
+        }
+
+        self.command = command
+    }
+
+    mutating func take() -> DeskCommand? {
+        defer { clear() }
+        return command
+    }
+
+    mutating func clear() {
+        command = nil
+    }
 }
 
 private struct PeripheralState {
@@ -271,4 +449,19 @@ private struct PeripheralState {
     var controlCharacteristic: CBCharacteristic?
     var height: DeskHeight?
     var speed: Double = 0
+
+    var isReadyForCommands: Bool {
+        positionCharacteristic != nil && controlCharacteristic != nil
+    }
+}
+
+private extension DeskCommand {
+    var isRetryableAfterReconnect: Bool {
+        switch self {
+        case .moveUp, .moveDown:
+            return true
+        case .stop, .moveToHeight, .moveToPreset:
+            return false
+        }
+    }
 }
