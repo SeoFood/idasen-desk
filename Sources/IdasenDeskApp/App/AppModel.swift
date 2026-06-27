@@ -130,6 +130,7 @@ final class AppModel {
     }
 
     func movePreset(_ kind: DeskPresetKind) {
+        ensureActiveDeskConnectionForCommand()
         guard
             let activeDeskID = settings.activeDeskID,
             let desk = settings.savedDesks.first(where: { $0.id == activeDeskID }),
@@ -145,12 +146,14 @@ final class AppModel {
     }
 
     func moveUp() {
+        ensureActiveDeskConnectionForCommand()
         Task {
             await movementCoordinator.moveUp()
         }
     }
 
     func moveDown() {
+        ensureActiveDeskConnectionForCommand()
         Task {
             await movementCoordinator.moveDown()
         }
@@ -171,6 +174,7 @@ final class AppModel {
         case .stop:
             stop()
         case .moveToHeight(let height):
+            ensureActiveDeskConnectionForCommand()
             Task {
                 await movementCoordinator.move(to: height)
             }
@@ -324,6 +328,14 @@ final class AppModel {
 
         connectionRequestInFlight = snapshot.id
         service.connect(to: snapshot.id)
+    }
+
+    private func ensureActiveDeskConnectionForCommand() {
+        guard settings.activeDeskID != nil, !connectionState.isConnected else {
+            return
+        }
+
+        reconnectActiveDesk()
     }
 
     private var activeDeskName: String {
