@@ -66,6 +66,16 @@ final class AppModel {
         service.scan()
     }
 
+    func reconnectActiveDesk() {
+        service.scan()
+        guard let activeDeskID = settings.activeDeskID else {
+            return
+        }
+
+        connectionRequestInFlight = activeDeskID
+        service.connect(to: activeDeskID)
+    }
+
     func saveAndConnect(_ snapshot: DeskSnapshot) {
         updateSettings { settings in
             if !settings.savedDesks.contains(where: { $0.id == snapshot.id }) {

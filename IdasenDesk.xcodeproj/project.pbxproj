@@ -17,6 +17,7 @@
 		426FA90207047D770C5C00E3 /* AutoStandScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF13D93CFFB9E3310B0BA4F /* AutoStandScheduler.swift */; };
 		45058BC6042371C0A38CE825 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F119F3229679D87412A27DB /* OnboardingView.swift */; };
 		46E3DE263F74BB788AEBB026 /* MoveDeskCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F944B8B6E190B972B82CCC /* MoveDeskCommand.swift */; };
+		4A8BC55E9126E729B619ED00 /* BluetoothPendingCommandQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78CE43F77A6746C3B04D6F5 /* BluetoothPendingCommandQueueTests.swift */; };
 		4F26A61F57128BCBBCCEEDCD /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A94DB87BAEE421F29A5D52 /* AppModel.swift */; };
 		54075C1A0F72AB66F3A19BAA /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109FEFC996BDCA497DED9E69 /* MenuBarContentView.swift */; };
 		57FB3283B5E74A4D0AD0F3FE /* DeskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24904C0016E9404730C4FC64 /* DeskService.swift */; };
@@ -119,6 +120,7 @@
 		A0CE0FA49AC645836CBF9C7F /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		A1BDDC373FE7959B4D92C6BA /* ShortcutsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingsView.swift; sourceTree = "<group>"; };
 		A70C1CBADCADB5AF45544A57 /* IdasenDesk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdasenDesk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B78CE43F77A6746C3B04D6F5 /* BluetoothPendingCommandQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothPendingCommandQueueTests.swift; sourceTree = "<group>"; };
 		B8583DF93DEC37B095B3F291 /* CommandParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandParsing.swift; sourceTree = "<group>"; };
 		BBC63EB6D200D211D0E80D51 /* LoginItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemController.swift; sourceTree = "<group>"; };
 		BFD0E0544999FE505B72BB50 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
@@ -271,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				EE2D413AE9336DC79E280416 /* AutoStandPlannerTests.swift */,
+				B78CE43F77A6746C3B04D6F5 /* BluetoothPendingCommandQueueTests.swift */,
 				D694D485B6964F14BF1BA6FB /* CommandParsingTests.swift */,
 				C277FB79BA014DEDEEB900D6 /* IdasenBLEProtocolTests.swift */,
 				5B5E18165247A40FC682B34F /* MovementCoordinatorTests.swift */,
@@ -564,6 +567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A8CB521C91982E8373CC112 /* AutoStandPlannerTests.swift in Sources */,
+				4A8BC55E9126E729B619ED00 /* BluetoothPendingCommandQueueTests.swift in Sources */,
 				58523A769543CAB965A431A1 /* CommandParsingTests.swift in Sources */,
 				F455F57815A791F115A941C6 /* IdasenBLEProtocolTests.swift in Sources */,
 				D6861253A35404E30CC2E5DD /* MovementCoordinatorTests.swift in Sources */,
