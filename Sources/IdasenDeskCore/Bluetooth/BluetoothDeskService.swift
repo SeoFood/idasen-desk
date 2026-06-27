@@ -16,6 +16,11 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
     private var positionPollTimer: DispatchSourceTimer?
     private var pendingCommands = BluetoothPendingCommandQueue()
     private var inFlightCommandsByPeripheralIdentifier: [UUID: DeskCommand] = [:]
+    private var commandRecoveryTimersByPeripheralIdentifier: [UUID: DispatchSourceTimer] = [:]
+    private var readinessRecoveryTimersByPeripheralIdentifier: [UUID: DispatchSourceTimer] = [:]
+    private var recoveringPeripheralIdentifiers = Set<UUID>()
+    private let commandPositionResponseTimeout: TimeInterval = 2.0
+    private let commandReadinessTimeout: TimeInterval = 4.0
 
     public override init() {
         super.init()
@@ -47,7 +52,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
                 self.centralManager = CBCentralManager(delegate: self, queue: self.queue)
             }
 
-            guard let peripheral = self.discoveredPeripherals[id] else {
+            guard let peripheral = self.peripheral(for: id) else {
                 if self.centralManager?.state == .poweredOn {
                     self.centralManager?.scanForPeripherals(withServices: nil, options: nil)
                 }
@@ -71,6 +76,9 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             }
             self.activeDeskID = nil
             self.pendingCommands.clear()
+            self.cancelAllCommandRecoveryTimers()
+            self.cancelAllReadinessRecoveryTimers()
+            self.recoveringPeripheralIdentifiers.removeAll()
             self.broadcaster.yield(.connectionStateChanged(nil, .disconnected))
         }
     }
@@ -96,7 +104,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             return
         }
 
-        guard let peripheral = discoveredPeripherals[id] else {
+        guard let peripheral = peripheral(for: id) else {
             pendingCommands.enqueue(command)
             guard command.isRetryableAfterReconnect else {
                 return
@@ -128,7 +136,11 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             return
         }
 
+        var updatedState = state
+        updatedState.commandHealth.recordCommand(command, at: Date())
+        peripheralsByIdentifier[peripheral.identifier] = updatedState
         inFlightCommandsByPeripheralIdentifier[peripheral.identifier] = command
+        scheduleCommandRecoveryWatchdog(for: peripheral)
         peripheral.writeValue(data, for: characteristic, type: .withResponse)
         readPosition(for: peripheral)
         broadcaster.yield(.commandSent(command))
@@ -141,6 +153,7 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
             return
         }
 
+        scheduleReadinessRecoveryWatchdog(for: peripheral)
         reconnectIfNeeded(to: id, peripheral: peripheral)
     }
 
@@ -156,28 +169,68 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
 
         switch peripheral.state {
         case .connected:
+            scheduleReadinessRecoveryWatchdog(for: peripheral)
             peripheral.discoverServices([
                 IdasenBLEProtocol.positionServiceUUID,
                 IdasenBLEProtocol.controlServiceUUID
             ])
         case .connecting, .disconnecting:
+            scheduleReadinessRecoveryWatchdog(for: peripheral)
             broadcaster.yield(.connectionStateChanged(id, .connecting))
         case .disconnected:
+            scheduleReadinessRecoveryWatchdog(for: peripheral)
             broadcaster.yield(.connectionStateChanged(id, .connecting))
             centralManager.connect(peripheral, options: nil)
         @unknown default:
+            scheduleReadinessRecoveryWatchdog(for: peripheral)
             broadcaster.yield(.connectionStateChanged(id, .connecting))
             centralManager.connect(peripheral, options: nil)
         }
     }
 
+    private func recoverCommandConnection(to id: DeskID, peripheral: CBPeripheral) {
+        guard let centralManager else {
+            broadcaster.yield(.error("Bluetooth is not ready"))
+            return
+        }
+
+        guard centralManager.state == .poweredOn else {
+            return
+        }
+
+        let inserted = recoveringPeripheralIdentifiers.insert(peripheral.identifier).inserted
+        guard inserted else {
+            broadcaster.yield(.connectionStateChanged(id, .connecting))
+            return
+        }
+
+        resetConnectionState(for: peripheral)
+        broadcaster.yield(.connectionStateChanged(id, .connecting))
+
+        switch peripheral.state {
+        case .connected, .connecting:
+            centralManager.cancelPeripheralConnection(peripheral)
+        case .disconnecting:
+            break
+        case .disconnected:
+            centralManager.connect(peripheral, options: nil)
+        @unknown default:
+            centralManager.cancelPeripheralConnection(peripheral)
+        }
+
+        centralManager.scanForPeripherals(withServices: nil, options: nil)
+    }
+
     private func resetConnectionState(for peripheral: CBPeripheral) {
         stopPositionPolling()
+        cancelCommandRecoveryTimer(for: peripheral)
+        cancelReadinessRecoveryTimer(for: peripheral)
         var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
         state.peripheral = peripheral
         state.positionCharacteristic = nil
         state.controlCharacteristic = nil
         state.speed = 0
+        state.commandHealth.resetCommand()
         peripheralsByIdentifier[peripheral.identifier] = state
         inFlightCommandsByPeripheralIdentifier[peripheral.identifier] = nil
     }
@@ -193,6 +246,66 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
         }
 
         sendOnQueue(command)
+    }
+
+    private func peripheral(for id: DeskID) -> CBPeripheral? {
+        if let peripheral = discoveredPeripherals[id] {
+            return peripheral
+        }
+
+        guard
+            let centralManager,
+            let uuid = UUID(uuidString: id.rawValue),
+            let peripheral = centralManager.retrievePeripherals(withIdentifiers: [uuid]).first
+        else {
+            return nil
+        }
+
+        discoveredPeripherals[id] = peripheral
+        var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
+        state.peripheral = peripheral
+        state.name = peripheral.name
+        peripheralsByIdentifier[peripheral.identifier] = state
+        return peripheral
+    }
+
+    private func scheduleReadinessRecoveryWatchdog(for peripheral: CBPeripheral) {
+        guard readinessRecoveryTimersByPeripheralIdentifier[peripheral.identifier] == nil else {
+            return
+        }
+
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + .milliseconds(Int(commandReadinessTimeout * 1_000)))
+        timer.setEventHandler { [weak self, weak peripheral] in
+            guard let self, let peripheral else {
+                return
+            }
+            self.handleReadinessRecoveryTimeout(for: peripheral)
+        }
+        readinessRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = timer
+        timer.resume()
+    }
+
+    private func handleReadinessRecoveryTimeout(for peripheral: CBPeripheral) {
+        readinessRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = nil
+
+        guard
+            let id = activeDeskID,
+            id.rawValue == peripheral.identifier.uuidString
+        else {
+            return
+        }
+
+        if
+            peripheral.state == .connected,
+            let state = peripheralsByIdentifier[peripheral.identifier],
+            state.isReadyForCommands
+        {
+            return
+        }
+
+        broadcaster.yield(.error("Desk connection stayed unavailable; reconnecting Bluetooth"))
+        recoverCommandConnection(to: id, peripheral: peripheral)
     }
 
     private func startPositionPolling(for peripheral: CBPeripheral) {
@@ -225,6 +338,70 @@ public final class BluetoothDeskService: NSObject, DeskService, @unchecked Senda
         }
 
         peripheral.readValue(for: characteristic)
+    }
+
+    private func scheduleCommandRecoveryWatchdog(for peripheral: CBPeripheral) {
+        cancelCommandRecoveryTimer(for: peripheral)
+
+        guard
+            let state = peripheralsByIdentifier[peripheral.identifier],
+            state.commandHealth.isAwaitingPositionSample
+        else {
+            return
+        }
+
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + .milliseconds(Int(commandPositionResponseTimeout * 1_000)))
+        timer.setEventHandler { [weak self, weak peripheral] in
+            guard let self, let peripheral else {
+                return
+            }
+            self.handleCommandRecoveryTimeout(for: peripheral)
+        }
+        commandRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = timer
+        timer.resume()
+    }
+
+    private func handleCommandRecoveryTimeout(for peripheral: CBPeripheral) {
+        commandRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = nil
+
+        guard
+            let id = activeDeskID,
+            id.rawValue == peripheral.identifier.uuidString,
+            var state = peripheralsByIdentifier[peripheral.identifier],
+            let command = state.commandHealth.timedOutCommand(at: Date(), timeout: commandPositionResponseTimeout)
+        else {
+            return
+        }
+
+        peripheralsByIdentifier[peripheral.identifier] = state
+        pendingCommands.enqueue(command)
+        broadcaster.yield(.error("Desk did not respond to movement command; reconnecting Bluetooth"))
+        recoverCommandConnection(to: id, peripheral: peripheral)
+    }
+
+    private func cancelCommandRecoveryTimer(for peripheral: CBPeripheral) {
+        commandRecoveryTimersByPeripheralIdentifier[peripheral.identifier]?.cancel()
+        commandRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = nil
+    }
+
+    private func cancelAllCommandRecoveryTimers() {
+        for timer in commandRecoveryTimersByPeripheralIdentifier.values {
+            timer.cancel()
+        }
+        commandRecoveryTimersByPeripheralIdentifier.removeAll()
+    }
+
+    private func cancelReadinessRecoveryTimer(for peripheral: CBPeripheral) {
+        readinessRecoveryTimersByPeripheralIdentifier[peripheral.identifier]?.cancel()
+        readinessRecoveryTimersByPeripheralIdentifier[peripheral.identifier] = nil
+    }
+
+    private func cancelAllReadinessRecoveryTimers() {
+        for timer in readinessRecoveryTimersByPeripheralIdentifier.values {
+            timer.cancel()
+        }
+        readinessRecoveryTimersByPeripheralIdentifier.removeAll()
     }
 
     private func snapshot(for peripheral: CBPeripheral, rssi: NSNumber? = nil, state: DeskConnectionState) -> DeskSnapshot {
@@ -298,6 +475,7 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
 
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheral.delegate = self
+        recoveringPeripheralIdentifiers.remove(peripheral.identifier)
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
         discoveredPeripherals[id] = peripheral
         var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
@@ -312,6 +490,7 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
 
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
+        recoveringPeripheralIdentifiers.remove(peripheral.identifier)
         if activeDeskID?.rawValue == peripheral.identifier.uuidString {
             resetConnectionState(for: peripheral)
             broadcaster.yield(.connectionStateChanged(id, .disconnected))
@@ -324,6 +503,7 @@ extension BluetoothDeskService: CBCentralManagerDelegate {
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
+        recoveringPeripheralIdentifiers.remove(peripheral.identifier)
         if activeDeskID?.rawValue == peripheral.identifier.uuidString {
             resetConnectionState(for: peripheral)
             central.scanForPeripherals(withServices: nil, options: nil)
@@ -370,6 +550,7 @@ extension BluetoothDeskService: CBPeripheralDelegate {
 
         if state.isReadyForCommands {
             let id = DeskID(rawValue: peripheral.identifier.uuidString)
+            cancelReadinessRecoveryTimer(for: peripheral)
             broadcaster.yield(.connectionStateChanged(id, .connected))
             flushPendingCommandIfReady(for: peripheral)
         }
@@ -391,7 +572,9 @@ extension BluetoothDeskService: CBPeripheralDelegate {
         var state = peripheralsByIdentifier[peripheral.identifier] ?? PeripheralState(peripheral: peripheral)
         state.height = sample.height
         state.speed = sample.speed
+        state.commandHealth.recordPositionSample(at: Date())
         peripheralsByIdentifier[peripheral.identifier] = state
+        cancelCommandRecoveryTimer(for: peripheral)
 
         let id = DeskID(rawValue: peripheral.identifier.uuidString)
         broadcaster.yield(.heightChanged(id, sample.height, speed: sample.speed))
@@ -449,13 +632,57 @@ private struct PeripheralState {
     var controlCharacteristic: CBCharacteristic?
     var height: DeskHeight?
     var speed: Double = 0
+    var commandHealth = BluetoothCommandHealthTracker()
 
     var isReadyForCommands: Bool {
         positionCharacteristic != nil && controlCharacteristic != nil
     }
 }
 
-private extension DeskCommand {
+struct BluetoothCommandHealthTracker: Sendable, Equatable {
+    private(set) var commandAwaitingPosition: DeskCommand?
+    private(set) var commandStartedAt: Date?
+    private(set) var lastPositionSampleAt: Date?
+
+    var isAwaitingPositionSample: Bool {
+        commandAwaitingPosition != nil
+    }
+
+    mutating func recordCommand(_ command: DeskCommand, at date: Date) {
+        guard command.isRetryableAfterReconnect else {
+            resetCommand()
+            return
+        }
+
+        commandAwaitingPosition = command
+        commandStartedAt = date
+    }
+
+    mutating func recordPositionSample(at date: Date) {
+        lastPositionSampleAt = date
+        resetCommand()
+    }
+
+    mutating func timedOutCommand(at date: Date, timeout: TimeInterval) -> DeskCommand? {
+        guard
+            let command = commandAwaitingPosition,
+            let commandStartedAt,
+            date.timeIntervalSince(commandStartedAt) >= timeout
+        else {
+            return nil
+        }
+
+        resetCommand()
+        return command
+    }
+
+    mutating func resetCommand() {
+        commandAwaitingPosition = nil
+        commandStartedAt = nil
+    }
+}
+
+extension DeskCommand {
     var isRetryableAfterReconnect: Bool {
         switch self {
         case .moveUp, .moveDown:
