@@ -64,8 +64,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.seofood.IdasenDesk
         PRODUCT_NAME: Idasen Desk
         PRODUCT_MODULE_NAME: IdasenDesk
-        MARKETING_VERSION: 0.1.4
-        CURRENT_PROJECT_VERSION: 5
+        MARKETING_VERSION: 0.1.5
+        CURRENT_PROJECT_VERSION: 6
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     dependencies:
       - target: IdasenDeskCore
